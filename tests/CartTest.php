@@ -164,7 +164,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test cart throws CartPropertNotNumericException.
+     * Test cart throws CartPropertyNotNumericException.
      *
      * @return void
      */
