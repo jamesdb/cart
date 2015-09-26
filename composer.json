@@ -1,0 +1,15 @@
+{
+    "require": {
+        "php": ">= 5.4.0",
+        "league/event": "^2.1",
+        "sebastian/money": "^1.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "jamesdb\\Cart\\": "src/"
+        }
+    }
+}
