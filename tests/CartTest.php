@@ -163,6 +163,11 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($filtered[key($filtered)]['name'], $item1['name']);
     }
 
+    /**
+     * Test cart throws CartPropertNotNumericException.
+     *
+     * @return void
+     */
     public function testCartThrowsNumericExceptionWhenInvalidPropertySupplied()
     {
         $this->setExpectedException('jamesdb\Cart\Exception\CartPropertyNotNumericException');
