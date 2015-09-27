@@ -185,7 +185,7 @@ $cart->getTax();
 
 ## Events
 
-League\Event is built into the cart and provides a number of events that can be emitted, this allows you to easily hook into certain key points during the carts lifecycle.
+[League\Event](http://event.thephpleague.com/2.0/) is built into the cart and provides a number of events that can be emitted, this allows you to easily hook into certain key points during the carts lifecycle.
 
 You can subscribe to these events by attaching listeners to the cart via ```addEventListener```.
 
