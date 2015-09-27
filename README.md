@@ -6,12 +6,12 @@ A framework agnostic shopping cart package.
 
 ### Money Value Objects
 
-This package uses Sebastian Bergmann's [money library](https://github.com/sebastianbergmann/money) (an implementation of Martin Fowler's money pattern) to represent monetary values. It avoids using floats due to them being ill-suited for monetary values. More information can be found in the links below:
+This package uses Sebastian Bergmann's [money library](https://github.com/sebastianbergmann/money) (an implementation of Martin Fowler's money pattern). Floats are avoided due to them being ill-suited for monetary values. More information can be found in the links below:
 
 * [http://martinfowler.com/eaaCatalog/money.html](http://martinfowler.com/eaaCatalog/money.html)
 * [http://culttt.com/2014/05/28/handle-money-currency-web-applications/](http://culttt.com/2014/05/28/handle-money-currency-web-applications/)
 
-Due to this when dealing with monetary values they will need to be represented as integers.
+Due to this when dealing with monetary values you will need to represent them as integers instead of floats.
 
 An example of this can be found below.
 
@@ -139,7 +139,7 @@ The cart can be filtered by any supplied key and value with the ```filter``` met
 
 ```php
 // Return all items with a quantity of 2.
-$cart->filter('quantity', '2');
+$cart->filter('quantity', 2);
 
 // Return all items with a price of 1000.
 $cart->filter('price', 1000);
@@ -158,7 +158,7 @@ The ```getTotalItems``` method will return an item count including quantities.
 $cart->getTotalItems();
 ```
 
-For your convenience a method ```isEmpty``` is built into the cart, this proxies through to the getTotalUniqueItems with a === 0 check.
+A convenience method ```isEmpty``` is built into the cart, this proxies through to the getTotalUniqueItems with a === 0 check.
 
 ```php
 $cart->isEmpty();
@@ -181,4 +181,39 @@ Get the total cart tax.
 
 ```php
 $cart->getTax();
+```
+
+## Events
+
+League\Event is built into the cart and provides a number of events that can be emitted, this allows you to easily hook into certain key points during the carts lifecycle.
+
+You can subscribe to these events by attaching listeners to the cart via ```addEventListener```.
+
+All events have built in methods to retrieve the item triggering the event and the cart itself.
+
+```php
+$cart->addEventListener('cart.add', function ($event) {
+    $item = $event->getItem();
+    $cart = $event->getCart();
+
+    ...
+});
+```
+
+### cart.add
+
+```php
+$cart->addEventListener('cart.add', function ($event) {});
+```
+
+### cart.update
+
+```php
+$cart->addEventListener('cart.update', function ($event) {});
+```
+
+### cart.remove
+
+```php
+$cart->addEventListener('cart.remove', function ($event) {});
 ```
