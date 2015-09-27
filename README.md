@@ -8,8 +8,8 @@ A framework agnostic shopping cart package.
 
 This package uses Sebastian Bergmann's [money library](https://github.com/sebastianbergmann/money) (an implementation of Martin Fowler's money pattern) to represent monetary values. It avoids using floats due to them being ill-suited for monetary values. More information can be found in the links below:
 
-[http://martinfowler.com/eaaCatalog/money.html](http://martinfowler.com/eaaCatalog/money.html)
-[http://culttt.com/2014/05/28/handle-money-currency-web-applications/](http://culttt.com/2014/05/28/handle-money-currency-web-applications/)
+* [http://martinfowler.com/eaaCatalog/money.html](http://martinfowler.com/eaaCatalog/money.html)
+* [http://culttt.com/2014/05/28/handle-money-currency-web-applications/](http://culttt.com/2014/05/28/handle-money-currency-web-applications/)
 
 Due to this when dealing with monetary values they will need to be represented as integers.
 
@@ -141,8 +141,8 @@ The cart can be filtered by any supplied key and value with the ```filter``` met
 // Return all items with a quantity of 2.
 $cart->filter('quantity', '2');
 
-// Return all items with a price of 10.
-$cart->filter('price', 10);
+// Return all items with a price of 1000.
+$cart->filter('price', 1000);
 ```
 ### Accessing Item counts
 
