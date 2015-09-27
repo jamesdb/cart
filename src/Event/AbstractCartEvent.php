@@ -2,21 +2,19 @@
 
 namespace jamesdb\Cart\Event;
 
-use League\Event\AbstractEvent;
 use jamesdb\Cart\Cart;
 use jamesdb\Cart\CartItem;
+use League\Event\AbstractEvent;
 
 abstract class AbstractCartEvent extends AbstractEvent
 {
     /*
-     * The cart.
-     *
      * @var \jamesdb\Cart\Cart
      */
     protected $cart;
 
     /**
-     * The added Item.
+     * The added item.
      *
      * @var \jamesdb\Cart\Item
      */
@@ -26,7 +24,7 @@ abstract class AbstractCartEvent extends AbstractEvent
      * Constructor.
      *
      * @param jamesdb\Cart\Cart      $cart
-     * @param jamesdb\Cart\CartItem $item
+     * @param jamesdb\Cart\CartItem  $item
      */
     public function __construct(Cart $cart, CartItem $item)
     {
@@ -35,7 +33,7 @@ abstract class AbstractCartEvent extends AbstractEvent
     }
 
     /**
-     * Get the Cart.
+     * Get the cart.
      *
      * @return \jamesdb\Cart\Cart
      */
