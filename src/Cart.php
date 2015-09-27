@@ -7,7 +7,6 @@ use jamesdb\Cart\Event as CartEvent;
 use jamesdb\Cart\Exception as CartException;
 use jamesdb\Cart\Storage\StorageInterface;
 use League\Event\Emitter;
-use League\Event\EmitterInterface;
 use SebastianBergmann\Money\Currency;
 use SebastianBergmann\Money\Money;
 
