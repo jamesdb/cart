@@ -1,4 +1,15 @@
 {
+    "name": "jamesdb/cart",
+    "description": "A framework agnostic shopping cart package.",
+    "keywords": ["shopping","cart"],
+    "homepage": "http://github.com/jamesdb/cart",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "James Baxter",
+            "email": "jamesbaxter2@outlook.com"
+        }
+    ]
     "require": {
         "php": ">= 5.4.0",
         "league/event": "^2.1",
