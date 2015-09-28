@@ -9,7 +9,7 @@
             "name": "James Baxter",
             "email": "jamesbaxter2@outlook.com"
         }
-    ]
+    ],
     "require": {
         "php": ">= 5.4.0",
         "league/event": "^2.1",
