@@ -2,6 +2,14 @@
 
 A framework agnostic shopping cart package.
 
+## Install
+
+Via Composer
+
+```bash
+$ composer require jamesdb/cart
+```
+
 ## Notes
 
 ### Money Value Objects
