@@ -127,18 +127,18 @@ $cart->clear();
 
 ### Accessing a specific Item
 
-To access a specific item use the cart ```item``` method.
+To access a specific item use the cart ```getItem``` method.
 
 If an item can't be found the method will return ```null```.
 
 ```php
-$cart->item('rowid');
+$cart->getItem('rowid');
 ```
 
 ### Accessing all Items
 
 ```php
-$cart->items();
+$cart->getItems();
 ```
 
 ### Filtering Items
