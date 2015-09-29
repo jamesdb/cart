@@ -124,7 +124,7 @@ class Cart
     {
         $rowId = $item->getRowId();
 
-        if ($row = $this->item($rowId)) {
+        if ($row = $this->getItem($rowId)) {
             $row->quantity += $item->quantity;
         } else {
             $this->contents[$rowId] = $item;
@@ -148,7 +148,7 @@ class Cart
      */
     public function remove($rowId)
     {
-        $item = $this->item($rowId);
+        $item = $this->getItem($rowId);
 
         if ($item === null) {
             throw new CartException\CartItemRemoveException(
@@ -177,7 +177,7 @@ class Cart
      */
     public function update($rowId, array $data = [])
     {
-        $row = $this->item($rowId);
+        $row = $this->getItem($rowId);
 
         if ($row === null) {
             throw new CartException\CartItemUpdateException(
@@ -195,22 +195,6 @@ class Cart
     }
 
     /**
-     * Get a specific item from the cart.
-     *
-     * @param  string $rowId
-     *
-     * @return array|null
-     */
-    public function item($rowId)
-    {
-        if (array_key_exists($rowId, $this->contents)) {
-            return $this->contents[$rowId];
-        }
-
-        return null;
-    }
-
-    /**
      * Clear the cart contents.
      *
      * @return void
@@ -223,11 +207,27 @@ class Cart
     }
 
     /**
+     * Get a specific item from the cart.
+     *
+     * @param  string $rowId
+     *
+     * @return array|null
+     */
+    public function getItem($rowId)
+    {
+        if (array_key_exists($rowId, $this->contents)) {
+            return $this->contents[$rowId];
+        }
+
+        return null;
+    }
+
+    /**
      * Return items.
      *
      * @return array
      */
-    public function items()
+    public function getItems()
     {
         return $this->contents;
     }

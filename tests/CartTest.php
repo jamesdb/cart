@@ -132,7 +132,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
             $this->cart->add($item);
         }
 
-        $this->assertEquals(count($this->cart->items()), $total);
+        $this->assertEquals(count($this->cart->getItems()), $total);
     }
 
     /**
@@ -145,7 +145,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $item1 = [
             'id'    => 7,
             'name'  => 'Pirate Eye Patch',
-            'price' => '299'
+            'price' => 299
         ];
 
         $item2 = [
@@ -164,13 +164,13 @@ class CartTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test cart throws CartPropertyNotNumericException.
+     * Test cart throws CartPropertyNotIntegerException.
      *
      * @return void
      */
-    public function testCartThrowsNumericExceptionWhenInvalidPropertySupplied()
+    public function testCartThrowsIntegerExceptionWhenInvalidPropertySupplied()
     {
-        $this->setExpectedException('jamesdb\Cart\Exception\CartPropertyNotNumericException');
+        $this->setExpectedException('jamesdb\Cart\Exception\CartPropertyNotIntegerException');
 
         $item = new CartItem;
         $item->quantity = 'one';
@@ -260,7 +260,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
         $this->cart->update($row, ['price' => $newPrice]);
 
-        $updatedItem = $this->cart->item($row);
+        $updatedItem = $this->cart->getItem($row);
 
         $this->assertEquals($updatedItem->price, $newPrice);
     }
@@ -358,7 +358,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
     public function testCartItemUpdateEvent()
     {
         $oldPrice = 399;
-        $newPrice = 4.99;
+        $newPrice = 499;
 
         $item = [
             'id'    => 11,
@@ -381,7 +381,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
         $row = $this->cart->add(new CartItem($item));
 
-        $this->assertEquals($this->cart->item($row)->price, $oldPrice);
+        $this->assertEquals($this->cart->getItem($row)->price, $oldPrice);
 
         $this->cart->update($row, ['price' => $newPrice]);
     }
@@ -396,7 +396,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $item = [
             'id'    => 15,
             'name'  => 'Fanta',
-            'price' => '80'
+            'price' => 80
         ];
 
         $this->cart->addEventListener('cart.remove', function($event) {

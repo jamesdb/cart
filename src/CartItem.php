@@ -3,7 +3,7 @@
 namespace jamesdb\Cart;
 
 use ArrayAccess;
-use jamesdb\Cart\Exception\CartPropertyNotNumericException;
+use jamesdb\Cart\Exception\CartPropertyNotIntegerException;
 use SebastianBergmann\Money\Currency;
 use SebastianBergmann\Money\Money;
 
@@ -67,8 +67,8 @@ class CartItem implements ArrayAccess
     {
         $numeric = ['price', 'tax', 'quantity'];
 
-        if (in_array($key, $numeric) && (! is_numeric($value))) {
-            return $this->throwNotNumericException($key);
+        if ((in_array($key, $numeric)) && (! is_int($value))) {
+            return $this->throwNotIntegerException($key);
         }
 
         $this->item[$key] = $value;
@@ -121,18 +121,18 @@ class CartItem implements ArrayAccess
     }
 
     /**
-     * Throws a CartPropertyNotNumericException.
+     * Throws a CartPropertyNotIntegerException.
      *
      * @param  string $key
      *
-     * @throws \jamesdb\Cart\Exception\CartPropertyNotNumericException
+     * @throws \jamesdb\Cart\Exception\CartPropertyNotIntegerException
      *
      * @return void
      */
-    public function throwNotNumericException($key)
+    public function throwNotIntegerException($key)
     {
-        throw new CartPropertyNotNumericException(
-            sprintf('The [%s] property must be numeric', $key)
+        throw new CartPropertyNotIntegerException(
+            sprintf('The [%s] property must be an integer', $key)
         );
     }
 
