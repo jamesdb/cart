@@ -1,5 +1,8 @@
 # Shopping Cart
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/jamesdb/cart.svg?style=flat-square)](https://packagist.org/packages/league/route)
+
 A framework agnostic shopping cart package.
 
 ## Install
