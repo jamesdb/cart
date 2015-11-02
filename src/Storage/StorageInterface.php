@@ -11,7 +11,7 @@ interface StorageInterface
      *
      * @return array
      */
-    public function get($identifer);
+    public function get($identifier);
 
     /**
      * Store the Cart.
@@ -21,7 +21,7 @@ interface StorageInterface
      *
      * @return void
      */
-    public function store($identifer, $data);
+    public function store($identifier, $data);
 
     /**
      * Clear the Cart.
