@@ -48,8 +48,8 @@ class Cart
     /**
      * Constructor.
      *
-     * @param string                         $identifier
-     * @param \jamesdb\Cart\StorageInterface $storage
+     * @param string                                 $identifier
+     * @param \jamesdb\Cart\Storage\StorageInterface $storage
      */
     public function __construct($identifier, StorageInterface $storage)
     {
@@ -116,9 +116,11 @@ class Cart
     /**
      * Add an item.
      *
-     * @param  \jamesdb\Cart\CartItem $item
+     * @param    \jamesdb\Cart\CartItem $item
      *
-     * @return string
+     * @property quantity
+     *
+     * @return   string
      */
     public function add(CartItem $item)
     {

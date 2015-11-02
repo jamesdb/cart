@@ -16,7 +16,7 @@ abstract class AbstractCartEvent extends AbstractEvent
     /**
      * The added item.
      *
-     * @var \jamesdb\Cart\Item
+     * @var \jamesdb\Cart\CartItem
      */
     protected $item;
 

@@ -7,7 +7,7 @@ interface StorageInterface
     /**
      * Return the Cart.
      *
-     * @param  string $identifer
+     * @param  string $identifier
      *
      * @return array
      */
