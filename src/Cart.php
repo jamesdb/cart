@@ -20,7 +20,7 @@ class Cart
     protected $identifier;
 
     /**
-     * @var \jamesdb\Cart\Contract\StorageInterface
+     * @var \jamesdb\Cart\Storage\StorageInterface
      */
     protected $storage;
 
