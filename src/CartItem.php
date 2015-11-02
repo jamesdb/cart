@@ -164,7 +164,7 @@ class CartItem implements ArrayAccess
     /**
      * Array Access get.
      *
-     * @param  string $key
+     * @param  string $offset
      *
      * @return mixed
      */
@@ -176,7 +176,7 @@ class CartItem implements ArrayAccess
     /**
      * Array Access get.
      *
-     * @param  string $key
+     * @param  string $offset
      *
      * @return mixed
      */
@@ -201,7 +201,7 @@ class CartItem implements ArrayAccess
     /**
      * Array Access unset.
      *
-     * @param  string $key
+     * @param  string $offset
      *
      * @return void
      */
