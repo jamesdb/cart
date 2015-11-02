@@ -118,8 +118,6 @@ class Cart
      *
      * @param    \jamesdb\Cart\CartItem $item
      *
-     * @property quantity
-     *
      * @return   string
      */
     public function add(CartItem $item)
