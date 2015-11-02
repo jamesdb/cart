@@ -1,6 +1,9 @@
 # Shopping Cart
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Build Status](https://img.shields.io/travis/jamesdb/cart/master.svg?style=flat-square)](https://travis-ci.org/jamesdb/cart)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/jamesdb/cart.svg?style=flat-square)](https://scrutinizer-ci.com/g/jamesdb/cart/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/jamesdb/cart.svg?style=flat-square)](https://scrutinizer-ci.com/g/jamesdb/cart)
 [![Total Downloads](https://img.shields.io/packagist/dt/jamesdb/cart.svg?style=flat-square)](https://packagist.org/packages/jamesdb/cart)
 
 A framework agnostic shopping cart package.
