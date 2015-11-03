@@ -4,6 +4,7 @@ namespace jamesdb\Cart\Test;
 
 use jamesdb\Cart\Cart;
 use jamesdb\Cart\CartItem;
+use SebastianBergmann\Money\Currency;
 
 class CartTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,6 +28,20 @@ class CartTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $this->cart->clear();
+    }
+
+    /**
+     * Test to ensure a currency can be set.
+     *
+     * @return void
+     */
+    public function testCartCurrencyCanBeSet()
+    {
+        $currency = new Currency('JPY');
+
+        $this->cart->setCurrency($currency);
+
+        $this->assertSame($this->cart->getCurrency(), $currency);
     }
 
     /**
