@@ -10,20 +10,20 @@ class CartTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Setup the Cart.
-     *
-     * @return void
      */
     public function setUp()
     {
         $storageMock = $this->getMock('jamesdb\Cart\Storage\NativeSessionDriver');
 
-        $this->cart = new Cart('cart', $storageMock);
+        $identifierMock = $this->getMock('jamesdb\Cart\Identifier\IdentifierInterface');
+
+        $identifierMock->expects($this->any())->method('get')->will($this->returnValue('cart'));
+
+        $this->cart = new Cart($identifierMock, $storageMock);
     }
 
     /**
      * Tear down the Cart.
-     *
-     * @return void
      */
     public function tearDown()
     {
@@ -32,8 +32,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test to ensure a currency can be set.
-     *
-     * @return void
      */
     public function testCartCurrencyCanBeSet()
     {
@@ -46,15 +44,18 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the cart handles multiple instances.
-     *
-     * @return void
      */
     public function testCartCanHandleMultipleInstances()
     {
+        $identifierMock = $this->getMock('jamesdb\Cart\Identifier\IdentifierInterface');
+
         $storageMock = $this->getMock('jamesdb\Cart\Storage\NativeSessionDriver');
 
-        $cart1 = new Cart('cart-1', $storageMock);
-        $cart2 = new Cart('cart-2', $storageMock);
+        $identifierMock->expects($this->at(0))->method('get')->will($this->returnValue('cart-1'));
+        $identifierMock->expects($this->at(1))->method('get')->will($this->returnValue('cart-2'));
+
+        $cart1 = new Cart($identifierMock, $storageMock);
+        $cart2 = new Cart($identifierMock, $storageMock);
 
         $cart1->add(new CartItem([
             'id'    => 6,
@@ -86,8 +87,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Ensure generated row ids are excluding quantities.
-     *
-     * @return void
      */
     public function testRowIdsIgnoringQuantity()
     {
@@ -110,8 +109,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that items can be added to the Cart.
-     *
-     * @return void
      */
     public function testCartCanAddItem()
     {
@@ -130,8 +127,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test to ensure the cart is returning the amount of items we supply it with.
-     *
-     * @return void
      */
     public function testCartReturnsItems()
     {
@@ -152,8 +147,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that the cart can be filtered.
-     *
-     * @return void
      */
     public function testCartCanBeFiltered()
     {
@@ -180,8 +173,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test cart throws CartPropertyNotIntegerException.
-     *
-     * @return void
      */
     public function testCartThrowsIntegerExceptionWhenInvalidPropertySupplied()
     {
@@ -193,8 +184,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that cart handles item quantities correctly.
-     *
-     * @return void
      */
     public function testCartIncrementsQuantityWhenMultipleItemsAdded()
     {
@@ -226,8 +215,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that the cart can remove an item.
-     *
-     * @return void
      */
     public function testCartRemovesItem()
     {
@@ -244,8 +231,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test to ensure the CartItemRemoveException is being thrown.
-     *
-     * @return void
      */
     public function testCartThrowsItemRemoveException()
     {
@@ -256,8 +241,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that an item can be updated.
-     *
-     * @return void
      */
     public function testCartUpdatesItem()
     {
@@ -282,8 +265,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test to ensure the CartItemUpdateException is being thrown.
-     *
-     * @return void
      */
     public function testCartThrowsItemUpdateException()
     {
@@ -294,8 +275,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that the cart is returning the correct price including tax.
-     *
-     * @return void
      */
     public function testCartPriceIncludingTax()
     {
@@ -319,8 +298,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that the cart is returning the correct price excluding tax.
-     *
-     * @return void
      */
     public function testCartPriceExcludingTax()
     {
@@ -338,8 +315,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the cart.add event is being triggered correctly.
-     *
-     * @return void
      */
     public function testCartItemAddEvent()
     {
@@ -367,8 +342,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the cart.update event is being triggered correctly.
-     *
-     * @return void
      */
     public function testCartItemUpdateEvent()
     {
@@ -403,8 +376,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test the cart.remove event is being triggered correctly.
-     *
-     * @return void
      */
     public function testCartItemRemoveEvent()
     {
@@ -436,8 +407,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test Cart array access.
-     *
-     * @return void
      */
     public function testCartItemArrayAccess()
     {
