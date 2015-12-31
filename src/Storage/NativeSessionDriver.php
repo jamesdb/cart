@@ -5,11 +5,7 @@ namespace jamesdb\Cart\Storage;
 class NativeSessionDriver implements StorageInterface
 {
     /**
-     * Return data stored in session.
-     *
-     * @param  string $identifier
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function get($identifier)
     {
@@ -17,12 +13,7 @@ class NativeSessionDriver implements StorageInterface
     }
 
     /**
-     * Store data in session.
-     *
-     * @param  string $identifier
-     * @param  array  $data
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function store($identifier, $data)
     {
@@ -30,11 +21,7 @@ class NativeSessionDriver implements StorageInterface
     }
 
     /**
-     * Clear data stored in session.
-     *
-     * @param  string $identifier
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function clear($identifier)
     {

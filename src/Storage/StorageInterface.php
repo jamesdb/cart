@@ -5,7 +5,7 @@ namespace jamesdb\Cart\Storage;
 interface StorageInterface
 {
     /**
-     * Return the Cart.
+     * Return stored data.
      *
      * @param  string $identifier
      *
@@ -14,7 +14,7 @@ interface StorageInterface
     public function get($identifier);
 
     /**
-     * Store the Cart.
+     * Store data.
      *
      * @param  string $identifier
      * @param  array  $data
@@ -24,7 +24,7 @@ interface StorageInterface
     public function store($identifier, $data);
 
     /**
-     * Clear the Cart.
+     * Clear data.
      *
      * @param  string identifier
      *
