@@ -5,6 +5,7 @@ namespace jamesdb\Cart;
 use jamesdb\Cart\CartItem;
 use jamesdb\Cart\Event as CartEvent;
 use jamesdb\Cart\Exception as CartException;
+use jamesdb\Cart\Identifier\IdentifierInterface;
 use jamesdb\Cart\Storage\StorageInterface;
 use League\Event\Emitter;
 use SebastianBergmann\Money\Currency;
@@ -13,9 +14,7 @@ use SebastianBergmann\Money\Money;
 class Cart
 {
     /**
-     * Cart Identifier.
-     *
-     * @var string
+     * @var \jamesdb\Cart\Identifier\IdentifierInterface
      */
     protected $identifier;
 
@@ -51,23 +50,13 @@ class Cart
      * @param string                                 $identifier
      * @param \jamesdb\Cart\Storage\StorageInterface $storage
      */
-    public function __construct($identifier, StorageInterface $storage)
+    public function __construct(IdentifierInterface $identifier, StorageInterface $storage)
     {
         $this->identifier   = $identifier;
         $this->storage      = $storage;
         $this->contents     = $this->storage->get($identifier) ?: [];
         $this->currency     = $this->currency ?: new Currency('GBP');
         $this->eventEmitter = $this->eventEmitter ?: new Emitter();
-    }
-
-    /**
-     * Return the Cart identifier.
-     *
-     * @return string
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
     }
 
     /**
@@ -130,7 +119,7 @@ class Cart
             $this->contents[$rowId] = $item;
         }
 
-        $this->storage->store($this->getIdentifier(), $this->contents);
+        $this->storage->store($this->identifier->get(), $this->contents);
 
         $this->getEventEmitter()->emit(new CartEvent\CartItemAddEvent($this, $item));
 
@@ -158,7 +147,7 @@ class Cart
 
         unset($this->contents[$rowId]);
 
-        $this->storage->store($this->getIdentifier(), $this->contents);
+        $this->storage->store($this->identifier->get(), $this->contents);
 
         $this->getEventEmitter()->emit(new CartEvent\CartItemRemoveEvent($this, $item));
 
@@ -201,7 +190,7 @@ class Cart
      */
     public function clear()
     {
-        $this->storage->clear($this->getIdentifier());
+        $this->storage->clear($this->identifier->get());
 
         $this->contents = [];
     }
