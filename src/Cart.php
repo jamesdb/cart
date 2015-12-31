@@ -47,8 +47,8 @@ class Cart
     /**
      * Constructor.
      *
-     * @param string                                 $identifier
-     * @param \jamesdb\Cart\Storage\StorageInterface $storage
+     * @param \jamesdb\Cart\Identifier\IdentifierInterface $identifier
+     * @param \jamesdb\Cart\Storage\StorageInterface       $storage
      */
     public function __construct(IdentifierInterface $identifier, StorageInterface $storage)
     {
