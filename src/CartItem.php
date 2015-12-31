@@ -61,6 +61,8 @@ class CartItem implements ArrayAccess
      * @param  string $key
      * @param  mixed  $value
      *
+     * @throws \jamesdb\Cart\Exception\CartPropertyNotIntegerException
+     *
      * @return void
      */
     public function set($key, $value)
@@ -68,7 +70,9 @@ class CartItem implements ArrayAccess
         $numeric = ['price', 'tax', 'quantity'];
 
         if ((in_array($key, $numeric)) && (! is_int($value))) {
-            return $this->throwNotIntegerException($key);
+            throw new CartPropertyNotIntegerException(
+                sprintf('The [%s] property must be an integer', $key)
+            );
         }
 
         $this->item[$key] = $value;
@@ -118,22 +122,6 @@ class CartItem implements ArrayAccess
     public function getTax(Currency $currency)
     {
         return (new Money($this->tax, $currency))->multiply($this->quantity);
-    }
-
-    /**
-     * Throws a CartPropertyNotIntegerException.
-     *
-     * @param  string $key
-     *
-     * @throws \jamesdb\Cart\Exception\CartPropertyNotIntegerException
-     *
-     * @return void
-     */
-    public function throwNotIntegerException($key)
-    {
-        throw new CartPropertyNotIntegerException(
-            sprintf('The [%s] property must be an integer', $key)
-        );
     }
 
     /**
