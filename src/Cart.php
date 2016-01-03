@@ -47,16 +47,17 @@ class Cart
     /**
      * Constructor.
      *
-     * @param \jamesdb\Cart\Identifier\IdentifierInterface $identifier
-     * @param \jamesdb\Cart\Storage\StorageInterface       $storage
+     * @param string                                 $identifier
+     * @param \jamesdb\Cart\Storage\StorageInterface $storage
      */
-    public function __construct(IdentifierInterface $identifier, StorageInterface $storage)
+    public function __construct($identifier, StorageInterface $storage)
     {
         $this->identifier   = $identifier;
         $this->storage      = $storage;
-        $this->contents     = $this->storage->get($identifier) ?: [];
         $this->currency     = $this->currency ?: new Currency('GBP');
         $this->eventEmitter = $this->eventEmitter ?: new Emitter();
+
+        $this->restore();
     }
 
     /**
@@ -119,7 +120,7 @@ class Cart
             $this->contents[$rowId] = $item;
         }
 
-        $this->storage->store($this->identifier->get(), $this->contents);
+        $this->storage->store($this->identifier, serialize($this->toArray()));
 
         $this->getEventEmitter()->emit(new CartEvent\CartItemAddEvent($this, $item));
 
@@ -147,7 +148,7 @@ class Cart
 
         unset($this->contents[$rowId]);
 
-        $this->storage->store($this->identifier->get(), $this->contents);
+        $this->storage->store($this->identifier, $this->contents);
 
         $this->getEventEmitter()->emit(new CartEvent\CartItemRemoveEvent($this, $item));
 
@@ -184,13 +185,13 @@ class Cart
     }
 
     /**
-     * Clear the cart contents.
+     * Empty the cart.
      *
      * @return void
      */
     public function clear()
     {
-        $this->storage->clear($this->identifier->get());
+        $this->storage->clear($this->identifier);
 
         $this->contents = [];
     }
@@ -318,5 +319,66 @@ class Cart
         ), $this->getCurrency());
 
         return $total->getConvertedAmount();
+    }
+
+    /**
+     * Restore the cart from storage.
+     *
+     * @throws \jamesdb\Cart\Exception\CartRestoreException
+     *
+     * @return void
+     */
+    public function restore()
+    {
+        $data = $this->storage->get($this->identifier);
+
+        if (! empty($data)) {
+            $data = unserialize($data);
+
+            $start = 'Storage data';
+
+            if (! is_array($data)) {
+                throw new CartException\CartRestoreException(
+                    sprintf('%s must be an array', $start)
+                );
+            }
+
+            if (! isset($data['id']) || (! isset($data['items']))) {
+                throw new CartException\CartRestoreException(
+                    sprintf('%s must have an id and items key', $start)
+                );
+            }
+
+            if (! is_string($data['id'])) {
+                throw new CartException\CartRestoreException(
+                    sprintf('Invalid %s type, ensure id is a string', strtolower($start))
+                );
+            }
+
+            if (! is_array($data['items'])) {
+                throw new CartException\CartRestoreException(
+                    sprintf('Invalid %s type, ensure items is an array', strtolower($start))
+                );
+            }
+
+            foreach ($data['items'] as $item) {
+                $this->contents[$item['id']] = new CartItem($item['data']);
+            }
+        }
+    }
+
+    /**
+     * Export the cart to array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'id'    => $this->identifier,
+            'items' => array_map(function (CartItem $item) {
+                return $item->toArray();
+            }, $this->contents)
+        ];
     }
 }

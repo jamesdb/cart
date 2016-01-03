@@ -125,6 +125,19 @@ class CartItem implements ArrayAccess
     }
 
     /**
+     * Export the item as array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'id'   => $this->getRowId(),
+            'data' => $this->item
+        ];
+    }
+
+    /**
      * Set property key and value.
      *
      * @param  string $key
