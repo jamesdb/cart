@@ -14,7 +14,7 @@ use SebastianBergmann\Money\Money;
 class Cart
 {
     /**
-     * @var \jamesdb\Cart\Identifier\IdentifierInterface
+     * @var string
      */
     protected $identifier;
 

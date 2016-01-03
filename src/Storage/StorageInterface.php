@@ -17,7 +17,7 @@ interface StorageInterface
      * Store data.
      *
      * @param  string $identifier
-     * @param  array  $data
+     * @param  string $data
      *
      * @return void
      */
