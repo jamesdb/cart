@@ -148,7 +148,7 @@ class Cart
 
         unset($this->contents[$rowId]);
 
-        $this->storage->store($this->identifier, $this->contents);
+        $this->storage->store($this->identifier, serialize($this->contents));
 
         $this->getEventEmitter()->emit(new CartEvent\CartItemRemoveEvent($this, $item));
 
