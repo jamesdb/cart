@@ -49,17 +49,14 @@ The currency defaults to 'GBP', if you want to change this you will need to pass
 
 ```php
 use jamesdb\Cart\Cart;
-use jamesdb\Cart\Identifier\StringIdentifier;
 use jamesdb\Cart\Storage\NativeSessionDriver;
 use SebastianBergmann\Money\Currency;
 
-$cart = new Cart(new StringIdentifier('cart'), new NativeSessionDriver);
+$cart = new Cart('cart', new NativeSessionDriver);
 $cart->setCurrency(new Currency('GBP'));
 ```
 
 Any storage implementation can be used as long as it implements the  ```jamesdb\Cart\Storage\StorageInterface```.
-
-In scenarios where you want to assign a custom cart identifier such as a user id you can implement ```jamesdb\Cart\identifier\IdentifierInterface```.
 
 ## Usage
 
