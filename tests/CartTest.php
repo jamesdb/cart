@@ -15,11 +15,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
     {
         $storageMock = $this->getMock('jamesdb\Cart\Storage\NativeSessionDriver');
 
-        $identifierMock = $this->getMock('jamesdb\Cart\Identifier\IdentifierInterface');
-
-        $identifierMock->expects($this->any())->method('get')->will($this->returnValue('cart'));
-
-        $this->cart = new Cart($identifierMock, $storageMock);
+        $this->cart = new Cart('cart', $storageMock);
     }
 
     /**
@@ -40,6 +36,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->cart->setCurrency($currency);
 
         $this->assertSame($this->cart->getCurrency(), $currency);
+        $this->assertFalse($this->cart->getCurrency() === 'GBP');
     }
 
     /**
@@ -47,15 +44,10 @@ class CartTest extends \PHPUnit_Framework_TestCase
      */
     public function testCartCanHandleMultipleInstances()
     {
-        $identifierMock = $this->getMock('jamesdb\Cart\Identifier\IdentifierInterface');
-
         $storageMock = $this->getMock('jamesdb\Cart\Storage\NativeSessionDriver');
 
-        $identifierMock->expects($this->at(0))->method('get')->will($this->returnValue('cart-1'));
-        $identifierMock->expects($this->at(1))->method('get')->will($this->returnValue('cart-2'));
-
-        $cart1 = new Cart($identifierMock, $storageMock);
-        $cart2 = new Cart($identifierMock, $storageMock);
+        $cart1 = new Cart('cart-1', $storageMock);
+        $cart2 = new Cart('cart-2', $storageMock);
 
         $cart1->add(new CartItem([
             'id'    => 6,
@@ -88,7 +80,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
     /**
      * Ensure generated row ids are excluding quantities.
      */
-    public function testRowIdsIgnoringQuantity()
+    public function testRowIdCreationIgnoresQuantity()
     {
         $item1 = new CartItem([
             'id'    => 32,
@@ -207,8 +199,6 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $this->cart->add(new CartItem($item2));
         $this->cart->add(new CartItem($item2));
 
-        $row = new CartItem($item2);
-
         $this->assertEquals(4, $this->cart->getTotalItems());
         $this->assertEquals(2, $this->cart->getTotalUniqueItems());
     }
@@ -227,6 +217,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $row = $this->cart->add(new CartItem($item));
 
         $this->assertTrue($this->cart->remove($row));
+        $this->assertFalse($this->cart->getTotalUniqueItems() === 1);
     }
 
     /**
@@ -260,7 +251,8 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
         $updatedItem = $this->cart->getItem($row);
 
-        $this->assertEquals($updatedItem->price, $newPrice);
+        $this->assertTrue($updatedItem->price === $newPrice);
+        $this->assertFalse($updatedItem->price === $oldPrice);
     }
 
     /**
@@ -310,7 +302,8 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
         $this->cart->add(new CartItem($item));
 
-        $this->assertEquals('20', $this->cart->getTotalPriceExcludingTax());
+        $this->assertEquals(20, $this->cart->getTotalPriceExcludingTax());
+        $this->assertFalse($this->cart->getTotalPriceExcludingTax() === 0);
     }
 
     /**
@@ -332,7 +325,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
             $item = $event->getItem();
 
             $this->assertInstanceOf('jamesdb\Cart\CartItem', $item);
-            $this->assertSame($item->id, 7);
+            $this->assertEquals($item->id, 7);
             $this->assertSame($item->name, 'Large Gravy');
             $this->assertEquals($item->price, 149);
         });
@@ -431,5 +424,160 @@ class CartTest extends \PHPUnit_Framework_TestCase
         unset($item['name']);
 
         $this->assertFalse(isset($item['name']));
+    }
+
+    /**
+     * Ensure cart data can be restored from storage.
+     */
+    public function testCartCanBeRestored()
+    {
+        $data = serialize([
+            'id' => 'cart-restore',
+            'items' => [
+                '59911bf22bb159432b8f8bed2f6d2657' => [
+                    'id'   => '59911bf22bb159432b8f8bed2f6d2657',
+                    'data' => [
+                        'options'  => [],
+                        'price'    => 3499,
+                        'quantity' => 1,
+                        'tax'      => 0,
+                        'id'       => 23,
+                        'name'     => 'Dank Souls 3'
+                    ]
+                ],
+                '2477eb7e1f2f07a3eac161b93e96bbbe' => [
+                    'id'   => '2477eb7e1f2f07a3eac161b93e96bbbe',
+                    'data' => [
+                        'options'  => [],
+                        'price'    => 250000,
+                        'quantity' => 1,
+                        'tax'      => 0,
+                        'id'       => 952,
+                        'name'     => 'Sony PlayStation 4 Games Console'
+                    ]
+                ]
+            ]
+        ]);
+
+        $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
+
+        $storageMock->expects($this->any())
+                    ->method('get')
+                    ->with($this->equalTo('cart-restore'))
+                    ->will($this->returnValue($data));
+
+        $cartMock = $this->getMock('jamesdb\Cart\Cart', null, ['cart-restore', $storageMock]);
+
+        $cartMock->restore();
+
+        $this->assertEquals(2, $cartMock->getTotalUniqueItems());
+        $this->assertSame($cartMock->getItem('59911bf22bb159432b8f8bed2f6d2657')->toArray(), unserialize($data)['items']['59911bf22bb159432b8f8bed2f6d2657']);
+        $this->assertSame($cartMock->getItem('2477eb7e1f2f07a3eac161b93e96bbbe')->toArray(), unserialize($data)['items']['2477eb7e1f2f07a3eac161b93e96bbbe']);
+    }
+
+    /**
+     * Ensure the restore method is correctly throwing a CartRestoreException.
+     */
+    public function testCartRestoreThrowsNotArrayException()
+    {
+        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Storage data must be an array');
+
+        $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
+
+        $storageMock->expects($this->once())
+                    ->method('get')
+                    ->with($this->equalTo('cart-restore'))
+                    ->will($this->returnValue(serialize('invalid data')));
+
+        $cartMock = $this->getMock('jamesdb\Cart\Cart', null, ['cart-restore', $storageMock]);
+
+        $cartMock->restore();
+
+    }
+
+    /**
+     * Ensure restore throws CartRestoreException when no items key is supplied.
+     */
+    public function testCartRestoreThrowsStructureExceptionWhenNoItemsKey()
+    {
+        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Storage data must have an id and items key');
+
+        $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
+
+        $storageMock->expects($this->once())
+                    ->method('get')
+                    ->with($this->equalTo('cart-restore'))
+                    ->will($this->returnValue(serialize([
+                        'id' => 'cart'
+                    ])));
+
+        $cartMock = $this->getMock('jamesdb\Cart\Cart', null, ['cart-restore', $storageMock]);
+
+        $cartMock->restore();
+    }
+
+    /**
+     * Ensure restore throws CartRestoreException when no id key is supplied.
+     */
+    public function testCartRestoreThrowsStructureExceptionWhenNoIdKey()
+    {
+        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Storage data must have an id and items key');
+
+        $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
+
+        $storageMock->expects($this->once())
+                    ->method('get')
+                    ->with($this->equalTo('cart-restore'))
+                    ->will($this->returnValue(serialize([
+                        'items' => []
+                    ])));
+
+        $cartMock = $this->getMock('jamesdb\Cart\Cart', null, ['cart-restore', $storageMock]);
+
+        $cartMock->restore();
+    }
+
+    /**
+     * Ensure restore throws an exception when the returned id isn't a string.
+     */
+    public function testRestoreThrowsDataTypeExceptionWhenInvalidIdSupplied()
+    {
+        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Invalid storage data type, ensure id is a string');
+
+        $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
+
+        $storageMock->expects($this->once())
+                    ->method('get')
+                    ->with($this->equalTo('cart-restore'))
+                    ->will($this->returnValue(serialize([
+                        'id' => [],
+                        'items' => []
+                    ])));
+
+        $cartMock = $this->getMock('jamesdb\Cart\Cart', null, ['cart-restore', $storageMock]);
+
+        $cartMock->restore();
+    }
+
+    /**
+     * Ensure restore throws an exception when the returned items isn't an array.
+     */
+    public function testRestoreThrowsDataTypeExceptionWhenInvalidItemsSupplied()
+    {
+        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Invalid storage data type, ensure items is an array');
+
+        $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
+
+        $storageMock->expects($this->once())
+                    ->method('get')
+                    ->with($this->equalTo('cart-restore'))
+                    ->will($this->returnValue(serialize([
+                        'id' => 'cart',
+                        'items' => 'invalid'
+                    ])));
+
+        $cartMock = $this->getMock('jamesdb\Cart\Cart', null, ['cart-restore', $storageMock]);
+
+        $cartMock->restore();
     }
 }
