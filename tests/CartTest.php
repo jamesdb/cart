@@ -480,7 +480,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
      */
     public function testCartRestoreThrowsNotArrayException()
     {
-        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Storage data must be an array');
+        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Data must be an array');
 
         $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
 
@@ -564,7 +564,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
      */
     public function testRestoreThrowsDataTypeExceptionWhenInvalidItemsSupplied()
     {
-        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Invalid storage data type, ensure items is an array');
+        $this->setExpectedException('jamesdb\Cart\Exception\CartRestoreException', 'Invalid storage data type, ensure items are an array');
 
         $storageMock = $this->getMock('jamesdb\Cart\Storage\StorageInterface');
 

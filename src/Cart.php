@@ -5,7 +5,6 @@ namespace jamesdb\Cart;
 use jamesdb\Cart\CartItem;
 use jamesdb\Cart\Event as CartEvent;
 use jamesdb\Cart\Exception as CartException;
-use jamesdb\Cart\Identifier\IdentifierInterface;
 use jamesdb\Cart\Storage\StorageInterface;
 use League\Event\Emitter;
 use SebastianBergmann\Money\Currency;
@@ -335,29 +334,27 @@ class Cart
         if (! empty($data)) {
             $data = unserialize($data);
 
-            $start = 'Storage data';
-
             if (! is_array($data)) {
                 throw new CartException\CartRestoreException(
-                    sprintf('%s must be an array', $start)
+                    'Data must be an array'
                 );
             }
 
             if (! isset($data['id']) || (! isset($data['items']))) {
                 throw new CartException\CartRestoreException(
-                    sprintf('%s must have an id and items key', $start)
+                    'Storage data must have an id and items key'
                 );
             }
 
             if (! is_string($data['id'])) {
                 throw new CartException\CartRestoreException(
-                    sprintf('Invalid %s type, ensure id is a string', strtolower($start))
+                    'Invalid storage data type, ensure id is a string'
                 );
             }
 
             if (! is_array($data['items'])) {
                 throw new CartException\CartRestoreException(
-                    sprintf('Invalid %s type, ensure items is an array', strtolower($start))
+                    'Invalid storage data type, ensure items are an array'
                 );
             }
 
