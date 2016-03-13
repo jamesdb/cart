@@ -105,9 +105,9 @@ class Cart
     /**
      * Add an item.
      *
-     * @param    \jamesdb\Cart\CartItem $item
+     * @param  \jamesdb\Cart\CartItem $item
      *
-     * @return   string
+     * @return string
      */
     public function add(CartItem $item)
     {
@@ -325,7 +325,7 @@ class Cart
      *
      * @throws \jamesdb\Cart\Exception\CartRestoreException
      *
-     * @return void
+     * @return boolean
      */
     public function restore()
     {
@@ -334,34 +334,23 @@ class Cart
         if (! empty($data)) {
             $data = unserialize($data);
 
-            if (! is_array($data)) {
-                throw new CartException\CartRestoreException(
-                    'Data must be an array'
-                );
+            if (is_array($data) && is_string($data['id']) && is_array($data['items'])) {
+                foreach ($data['items'] as $item) {
+                    $this->contents[$item['id']] = new CartItem($item['data']);
+                }
+
+                return true;
             }
 
-            if (! isset($data['id']) || (! isset($data['items']))) {
-                throw new CartException\CartRestoreException(
-                    'Storage data must have an id and items key'
-                );
-            }
-
-            if (! is_string($data['id'])) {
-                throw new CartException\CartRestoreException(
-                    'Invalid storage data type, ensure id is a string'
-                );
-            }
-
-            if (! is_array($data['items'])) {
-                throw new CartException\CartRestoreException(
-                    'Invalid storage data type, ensure items are an array'
-                );
-            }
-
-            foreach ($data['items'] as $item) {
-                $this->contents[$item['id']] = new CartItem($item['data']);
-            }
+            throw new CartException\CartRestoreException(
+                sprintf(
+                    'Unable to restore cart [%s] from storage, ensure id is a string and the items are an array',
+                    $this->identifier
+                )
+            );
         }
+
+        return false;
     }
 
     /**
