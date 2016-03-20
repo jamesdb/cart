@@ -9,7 +9,7 @@ class NativeSessionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the storage stores data.
      */
-    public function testStorageStores()
+    public function testNativeSessionStorageStores()
     {
         $data = 'bar';
 
@@ -22,7 +22,7 @@ class NativeSessionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the storage clears data.
      */
-    public function testStorageClears()
+    public function testNativeSessionStorageClears()
     {
         $data = 'bar';
 
