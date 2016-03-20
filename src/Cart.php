@@ -10,8 +10,10 @@ use League\Event\Emitter;
 use SebastianBergmann\Money\Currency;
 use SebastianBergmann\Money\Money;
 
-class Cart
+class Cart implements CurrencyAwareInterface
 {
+    use CurrencyAwareTrait;
+
     /**
      * @var string
      */
@@ -28,13 +30,6 @@ class Cart
      * @var array
      */
     protected $contents = [];
-
-    /**
-     * Currency.
-     *
-     * @var \SebastianBergmann\Money\Currency
-     */
-    protected $currency;
 
     /**
      * Event Emitter.
@@ -57,26 +52,6 @@ class Cart
         $this->eventEmitter = $this->eventEmitter ?: new Emitter();
 
         $this->restore();
-    }
-
-    /**
-     * Set the Currency.
-     *
-     * @param \SebastianBergmann\Money\Currency $currency
-     */
-    public function setCurrency(Currency $currency)
-    {
-        $this->currency = $currency;
-    }
-
-    /**
-     * Return the Currency.
-     *
-     * @return \SebastianBergmann\Money\Currency $currency
-     */
-    public function getCurrency()
-    {
-        return $this->currency;
     }
 
     /**
@@ -184,7 +159,7 @@ class Cart
     }
 
     /**
-     * Empty the cart.
+     * Clear the cart.
      *
      * @return void
      */
