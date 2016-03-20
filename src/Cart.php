@@ -175,7 +175,7 @@ class Cart implements CurrencyAwareInterface
      *
      * @param  string $rowId
      *
-     * @return array|null
+     * @return \jamesdb\Cart\CartItem|null
      */
     public function getItem($rowId)
     {
