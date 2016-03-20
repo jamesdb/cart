@@ -21,7 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "jamesdb\\Cart\\": "src/"
+            "jamesdb\\Cart\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "jamesdb\\Cart\\Test\\": "tests"
         }
     }
 }
