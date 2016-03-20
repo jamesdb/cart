@@ -1,6 +1,6 @@
 <?php
 
-namespace jamesdb\Cart\Test\Storage\Asset;
+namespace jamesdb\Cart\Test\Storage;
 
 use Aura\Session\Phpfunc;
 

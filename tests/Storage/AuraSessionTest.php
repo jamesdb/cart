@@ -8,8 +8,6 @@ use Aura\Session\Randval;
 use Aura\Session\SegmentFactory;
 use Aura\Session\Session;
 use jamesdb\Cart\Storage\AuraSessionDriver;
-use jamesdb\Cart\Test\Storage\Asset\FakePhpfunc;
-use jamesdb\Cart\Test\Storage\Asset\FakeSessionHandler;
 
 class AuraSessionTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +21,6 @@ class AuraSessionTest extends \PHPUnit_Framework_TestCase
         // There must be a better way? :/
         @session_start();
 
-        $this->phpfunc = new FakePhpfunc;
         $handler = new FakeSessionHandler();
         session_set_save_handler(
             array($handler, 'open'),
@@ -37,7 +34,7 @@ class AuraSessionTest extends \PHPUnit_Framework_TestCase
         $this->session = new Session(
             new SegmentFactory,
             new CsrfTokenFactory(new Randval(new Phpfunc)),
-            $this->phpfunc,
+            new FakePhpfunc,
             []
         );
     }

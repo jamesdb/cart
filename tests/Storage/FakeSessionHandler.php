@@ -1,6 +1,6 @@
 <?php
 
-namespace jamesdb\Cart\Test\Storage\Asset;
+namespace jamesdb\Cart\Test\Storage;
 
 // a session handler that does nothing, for testing purposes only
 class FakeSessionHandler
