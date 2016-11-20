@@ -16,8 +16,8 @@ class Money implements CurrencyAwareInterface
     /**
      * Constructor.
      *
-     * @param integer $total
-     * @param Money   $money
+     * @param integer         $total
+     * @param \Money\Currency $money
      */
     public function __construct($total = 0, MoneyPHP\Currency $currency)
     {
