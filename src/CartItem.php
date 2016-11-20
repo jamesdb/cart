@@ -4,8 +4,7 @@ namespace jamesdb\Cart;
 
 use ArrayAccess;
 use jamesdb\Cart\Exception\CartPropertyNotIntegerException;
-use SebastianBergmann\Money\Currency;
-use SebastianBergmann\Money\Money;
+use Money\Currency;
 
 class CartItem implements ArrayAccess
 {
@@ -101,7 +100,7 @@ class CartItem implements ArrayAccess
      */
     public function getPriceExcludingTax(Currency $currency)
     {
-        return (new Money($this->price, $currency))->multiply($this->quantity);
+        return (new Money($this->price, $currency))->getMoney()->multiply($this->quantity);
     }
 
     /**
@@ -111,17 +110,17 @@ class CartItem implements ArrayAccess
      */
     public function getPrice(Currency $currency)
     {
-        return (new Money($this->price + $this->tax, $currency))->multiply($this->quantity);
+        return (new Money($this->price + $this->tax, $currency))->getMoney()->multiply($this->quantity);
     }
 
     /**
-     * Return the item tex.
+     * Return the item tax.
      *
      * @return SebastianBergmann\Money\Money
      */
     public function getTax(Currency $currency)
     {
-        return (new Money($this->tax, $currency))->multiply($this->quantity);
+        return (new Money($this->tax, $currency))->getMoney()->multiply($this->quantity);
     }
 
     /**

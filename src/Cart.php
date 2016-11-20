@@ -7,8 +7,7 @@ use jamesdb\Cart\Event as CartEvent;
 use jamesdb\Cart\Exception as CartException;
 use jamesdb\Cart\Storage\StorageInterface;
 use League\Event\Emitter;
-use SebastianBergmann\Money\Currency;
-use SebastianBergmann\Money\Money;
+use Money\Currency;
 
 class Cart implements CurrencyAwareInterface
 {
@@ -39,6 +38,11 @@ class Cart implements CurrencyAwareInterface
     protected $eventEmitter;
 
     /**
+     * @var callback
+     */
+    protected $formatterCallback;
+
+    /**
      * Constructor.
      *
      * @param string                                 $identifier
@@ -48,8 +52,9 @@ class Cart implements CurrencyAwareInterface
     {
         $this->identifier   = $identifier;
         $this->storage      = $storage;
-        $this->currency     = $this->currency ?: new Currency('GBP');
-        $this->eventEmitter = $this->eventEmitter ?: new Emitter();
+        $this->eventEmitter = new Emitter();
+
+        $this->setCurrency(new Currency('GBP'));
 
         $this->restore();
     }
@@ -75,6 +80,32 @@ class Cart implements CurrencyAwareInterface
     public function getEventEmitter()
     {
         return $this->eventEmitter;
+    }
+
+    /**
+     * Set the formatter callback.
+     *
+     * @param callable $callback
+     */
+    public function setFormatterCallback(callable $callback)
+    {
+        $this->formatterCallback = $callback;
+    }
+
+    /**
+     * Get the formatter callback.
+     *
+     * @throws \jamesdb\Cart\Exception\CartFormatterCallbackException
+     *
+     * @return callable
+     */
+    public function getFormatterCallback()
+    {
+        if (($this->formatterCallback === null) || (! is_callable($this->formatterCallback))) {
+            throw new CartException\CartFormatterCallbackException('Invalid callback');
+        }
+
+        return $this->formatterCallback;
     }
 
     /**
@@ -260,7 +291,7 @@ class Cart implements CurrencyAwareInterface
             }, $this->contents)
         ), $this->getCurrency());
 
-        return $total->getConvertedAmount();
+        return call_user_func($this->getFormatterCallback(), $total->getMoney());
     }
 
     /**
@@ -276,7 +307,7 @@ class Cart implements CurrencyAwareInterface
             }, $this->contents)
         ), $this->getCurrency());
 
-        return $total->getConvertedAmount();
+        return call_user_func($this->getFormatterCallback(), $total->getMoney());
     }
 
     /**
@@ -292,7 +323,7 @@ class Cart implements CurrencyAwareInterface
             }, $this->contents)
         ), $this->getCurrency());
 
-        return $total->getConvertedAmount();
+        return call_user_func($this->getFormatterCallback(), $total->getMoney());
     }
 
     /**

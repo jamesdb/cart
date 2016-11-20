@@ -2,12 +2,12 @@
 
 namespace jamesdb\Cart;
 
-use SebastianBergmann\Money\Currency;
+use Money\Currency;
 
 trait CurrencyAwareTrait
 {
     /**
-     * @var \SebastianBergmann\Money\Currency
+     * @var \Money\Currency
      */
     protected $currency;
 

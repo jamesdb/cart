@@ -14,7 +14,7 @@
         "php": ">= 5.4.0",
         "aura/session": "^2.0",
         "league/event": "^2.1",
-        "sebastian/money": "^1.6"
+        "moneyphp/money": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8"
