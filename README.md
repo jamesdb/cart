@@ -50,8 +50,8 @@ A custom formatter callback can be setup via ```setFormatterCallback```, see [mo
 ```php
 use jamesdb\Cart\Cart;
 use jamesdb\Cart\Storage\NativeSessionDriver;
-use Money\Currency;
 use Money\Currencies\ISOCurrencies;
+use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
 
 $cart = new Cart('cart', new NativeSessionDriver);
@@ -59,7 +59,7 @@ $cart->setCurrency(new Currency('GBP'));
 
 $cart->setFormatterCallback(function ($money) {
     $currencies = new ISOCurrencies();
-    $moneyFormatter = new DecimalMoneyFormatter($numberFormatter, $currencies);
+    $moneyFormatter = new DecimalMoneyFormatter($currencies);
 
     return $moneyFormatter->format($money); // outputs in decimal format.
 });
