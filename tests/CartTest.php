@@ -4,7 +4,7 @@ namespace jamesdb\Cart\Test;
 
 use jamesdb\Cart\Cart;
 use jamesdb\Cart\CartItem;
-use SebastianBergmann\Money\Currency;
+use Money\Currency;
 
 class CartTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,6 +16,9 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $storageMock = $this->getMock('jamesdb\Cart\Storage\NativeSessionDriver');
 
         $this->cart = new Cart('cart', $storageMock);
+        $this->cart->setFormatterCallback(function ($money) {
+            return $money->getAmount();
+        });
     }
 
     /**
@@ -31,12 +34,34 @@ class CartTest extends \PHPUnit_Framework_TestCase
      */
     public function testCartCurrencyCanBeSet()
     {
+        $this->assertSame($this->cart->getCurrency()->getCode(), 'GBP');
+
         $currency = new Currency('JPY');
 
         $this->cart->setCurrency($currency);
 
         $this->assertSame($this->cart->getCurrency(), $currency);
-        $this->assertFalse($this->cart->getCurrency() === 'GBP');
+        $this->assertFalse($this->cart->getCurrency()->getCode() === 'GBP');
+    }
+
+    /**
+     * Ensure formatter callback throws exception when not set.
+     */
+    public function testCartThrowsFormatterCallbackExceptionWhenNotSet()
+    {
+        $this->setExpectedException('jamesdb\Cart\Exception\CartFormatterCallbackException', 'Invalid callback');
+
+        $storageMock = $this->getMock('jamesdb\Cart\Storage\NativeSessionDriver');
+
+        $cart = new Cart('cart', $storageMock);
+
+        $cart->add(new CartItem([
+            'id'    => 1,
+            'name'  => 'Blerg',
+            'price' => 1000
+        ]));
+
+        $cart->getTotalPrice();
     }
 
     /**
@@ -273,19 +298,19 @@ class CartTest extends \PHPUnit_Framework_TestCase
         $item = [
             'id'    => 3,
             'name'  => 'Macbook Pro',
-            'price' => 120000,
-            'tax'   => 24000
+            'price' => 1200,
+            'tax'   => 240
         ];
 
         $this->cart->add(new CartItem($item));
 
-        $this->assertEquals('1440', $this->cart->getTotalPrice());
-        $this->assertEquals('240', $this->cart->getTotalTax());
+        $this->assertEquals(1440, $this->cart->getTotalPrice());
+        $this->assertEquals(240, $this->cart->getTotalTax());
 
         $this->cart->add(new CartItem($item));
 
-        $this->assertEquals('2880', $this->cart->getTotalPrice());
-        $this->assertEquals('480', $this->cart->getTotalTax());
+        $this->assertEquals(2880, $this->cart->getTotalPrice());
+        $this->assertEquals(480, $this->cart->getTotalTax());
     }
 
     /**
@@ -302,7 +327,7 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
         $this->cart->add(new CartItem($item));
 
-        $this->assertEquals(20, $this->cart->getTotalPriceExcludingTax());
+        $this->assertEquals(2000, $this->cart->getTotalPriceExcludingTax());
         $this->assertFalse($this->cart->getTotalPriceExcludingTax() === 0);
     }
 

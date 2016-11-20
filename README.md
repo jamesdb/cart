@@ -20,7 +20,7 @@ $ composer require jamesdb/cart
 
 ### Money Value Objects
 
-This package uses Sebastian Bergmann's [money library](https://github.com/sebastianbergmann/money) (an implementation of Martin Fowler's money pattern). Floats are avoided due to them being ill-suited for monetary values. More information can be found in the links below:
+This package uses [moneyphp/money](https://github.com/moneyphp/money) (an implementation of Martin Fowler's money pattern). Floats are avoided due to them being ill-suited for monetary values. More information can be found in the links below:
 
 * [http://martinfowler.com/eaaCatalog/money.html](http://martinfowler.com/eaaCatalog/money.html)
 * [http://culttt.com/2014/05/28/handle-money-currency-web-applications/](http://culttt.com/2014/05/28/handle-money-currency-web-applications/)
@@ -31,12 +31,10 @@ An example of this can be found below.
 
 ```php
 use jamesdb\Cart\CartItem;
-use SebastianBergmann\Money\Money;
 
 $item = new CartItem([
     ...
     'price' => 1099, // Instead of £10.99 or $10.99 etc.
-    'price' => Money::fromString('10.99', $cart->getCurrency()) // Alternatively you could convert the floats to integers.
     ...
 ]);
 ```
@@ -47,13 +45,24 @@ To setup a cart instance you need to pass an identifier and storage implementati
 
 The currency defaults to 'GBP', if you want to change this you will need to pass your currency of choice into the ```setCurrency``` method as shown below.
 
+A custom formatter callback can be setup via ```setFormatterCallback```, see [moneyphp formatters](http://moneyphp.org/en/latest/features/formatting.html) for more information.
+
 ```php
 use jamesdb\Cart\Cart;
 use jamesdb\Cart\Storage\NativeSessionDriver;
-use SebastianBergmann\Money\Currency;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
+use Money\Formatter\DecimalMoneyFormatter;
 
 $cart = new Cart('cart', new NativeSessionDriver);
 $cart->setCurrency(new Currency('GBP'));
+
+$cart->setFormatterCallback(function ($money) {
+    $currencies = new ISOCurrencies();
+    $moneyFormatter = new DecimalMoneyFormatter($currencies);
+
+    return $moneyFormatter->format($money); // outputs in decimal format.
+});
 ```
 
 Any storage implementation can be used as long as it implements the  ```jamesdb\Cart\Storage\StorageInterface```.
