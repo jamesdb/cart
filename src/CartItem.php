@@ -96,7 +96,9 @@ class CartItem implements ArrayAccess
     /**
      * Return item price excluding tax.
      *
-     * @return \SebastianBergmann\Money\Money
+     * @param  \Money\Currency $currency
+     *
+     * @return \jamesdb\Cart\Money
      */
     public function getPriceExcludingTax(Currency $currency)
     {
@@ -106,7 +108,9 @@ class CartItem implements ArrayAccess
     /**
      * Return item price including tax.
      *
-     * @return \SebastianBergmann\Money\Money
+     * @param  \Money\Currency $currency
+     *
+     * @return \jamesdb\Cart\Money
      */
     public function getPrice(Currency $currency)
     {
@@ -116,7 +120,9 @@ class CartItem implements ArrayAccess
     /**
      * Return the item tax.
      *
-     * @return SebastianBergmann\Money\Money
+     * @param  \Money\Currency $currency
+     *
+     * @return \jamesdb\Cart\Money
      */
     public function getTax(Currency $currency)
     {
