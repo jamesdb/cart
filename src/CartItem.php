@@ -98,7 +98,7 @@ class CartItem implements ArrayAccess
      *
      * @param  \Money\Currency $currency
      *
-     * @return \jamesdb\Cart\Money
+     * @return \Money\Money
      */
     public function getPriceExcludingTax(Currency $currency)
     {
@@ -110,7 +110,7 @@ class CartItem implements ArrayAccess
      *
      * @param  \Money\Currency $currency
      *
-     * @return \jamesdb\Cart\Money
+     * @return \Money\Money
      */
     public function getPrice(Currency $currency)
     {
@@ -122,7 +122,7 @@ class CartItem implements ArrayAccess
      *
      * @param  \Money\Currency $currency
      *
-     * @return \jamesdb\Cart\Money
+     * @return \Money\Money
      */
     public function getTax(Currency $currency)
     {
@@ -172,7 +172,7 @@ class CartItem implements ArrayAccess
      *
      * @param  string $offset
      *
-     * @return mixed
+     * @return boolean
      */
     public function offsetExists($offset)
     {
