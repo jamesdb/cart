@@ -6,7 +6,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "James Baxter"
+            "name": "James Baxter",
+            "email": "jamesdb@users.noreply.github.com"
         }
     ],
     "require": {
